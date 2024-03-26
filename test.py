@@ -51,7 +51,6 @@ def evaluate_model(model, X_test, y_test):
 
 def optimize_decision_tree(X_train, y_train):
     dt_op = DecisionTreeRegressor()
-
     # Define the hyperparameter grid
     parameters = {
         'max_depth': [1, 2, 3, 4, 5, 6, 7, 8, 9],
@@ -59,12 +58,10 @@ def optimize_decision_tree(X_train, y_train):
         'min_samples_split': [1, 2, 3, 4, 5, 6, 7, 8, 9],
         'criterion': ['mse', 'friedman_mse', 'mae']
     }
-
     # Create the GridSearchCV object
     grid_search = GridSearchCV(estimator=dt_op, param_grid=parameters, cv=5,
                                n_jobs=-1, verbose=2)
     grid_search.fit(X_train, y_train)
-
     # Get the best parameters and best model
     best_model = grid_search.best_estimator_
     return best_model

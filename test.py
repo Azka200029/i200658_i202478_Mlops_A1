@@ -20,8 +20,8 @@ def preprocess_data(weather_pred):
     weather_pred['day'] = weather_pred['date'].dt.day
     weather_pred['weekday'] = weather_pred['date'].dt.weekday
     weather_pred['quarter'] = weather_pred['date'].dt.quarter
-    weather_pred.drop(['dt_iso', 'city_name', 'weather_description', 'date',
-                       'time'], axis=1, inplace=True)
+    weather_pred.drop(['dt_iso', 'city_name', 'weather_description',
+                       'date', 'time'], axis=1, inplace=True)
     # Label encoding
     le = LabelEncoder()
     weather_pred['weather_main'] = le.fit_transform

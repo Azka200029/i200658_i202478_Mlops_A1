@@ -100,14 +100,13 @@ class TestWeatherPrediction(unittest.TestCase):
                         "Mean Absolute Error should be less than 2")
         self.assertTrue(rmse < 3,
                         "Root Mean Squared Error should be less than 3")
-    
+
     def test_model_pickle(self):
         # Serialize model
         filename = 'weather_model.pkl'
         pickle.dump(self.model, open(filename, 'wb'))
         # Load model
         loaded_model = pickle.load(open(filename, 'rb'))
-
         self.assertIsNotNone(loaded_model, "Model should be loaded success")
 
 

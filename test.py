@@ -58,7 +58,6 @@ def main():
     test_size = min(0.2, len(weather_pred_new) / len(weather_pred))
     X_train, X_test, y_train, y_test = train_test_split(X, y,
                                                         test_size=test_size,
-                                                        train_size=None,
                                                         random_state=42)
     # Check if the resulting train set is empty
     if len(X_train) == 0:

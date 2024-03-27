@@ -69,8 +69,7 @@ def main():
     print('Root Mean Squared Error:', rmse)
 
 
-class TestWeatherPrediction(unittest.TestCase):
-   
+class TestWeatherPrediction(unittest.TestCase):  
     def setUp(self):
         # Load data
         self.weather_pred = pd.read_csv('weather_features.csv')
@@ -81,7 +80,7 @@ class TestWeatherPrediction(unittest.TestCase):
         # Split data
         self.X = self.weather_pred_new.drop('temp', axis=1)
         self.y = self.weather_pred_new['temp']
-        self.X_train, self.X_test, self.y_train, 
+        self.X_train, self.X_test, self.y_train,
         self.y_test = train_test_split(self.X, self.y, test_size=0.2,
                                        random_state=42)
         # Train model

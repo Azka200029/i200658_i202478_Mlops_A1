@@ -105,3 +105,4 @@ if __name__ == "__main__":
     print('Executing main function...')
     print('\n')
     main()
+    print('Execution completed.')

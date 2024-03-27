@@ -12,8 +12,10 @@ from sklearn.model_selection import GridSearchCV
 
 def preprocess_data(weather_pred):
     # Preprocessing steps
-    weather_pred['date'] = pd.to_datetime(weather_pred['dt_iso'].str[:10])
-    weather_pred['time'] = pd.to_datetime(weather_pred['dt_iso'].str[11:19])
+    weather_pred['date'] = pd.to_datetime(weather_pred['dt_iso'].str[:10],
+                                          format='%Y-%m-%d')
+    weather_pred['time'] = pd.to_datetime(weather_pred['dt_iso'].str[11:19],
+                                          format='%H:%M:%S')
     weather_pred['month'] = weather_pred['date'].dt.month
     weather_pred['year'] = weather_pred['date'].dt.year
     weather_pred['hour'] = weather_pred['time'].dt.hour
@@ -29,8 +31,9 @@ def preprocess_data(weather_pred):
     weather_pred['weather_icon'] = le.fit_transform
     (weather_pred['weather_icon'])
     # Remove outliers
-    z = np.abs(zscore(weather_pred))
-    weather_pred_new = weather_pred[(z < 3).all(axis=1)]
+    z = np.abs(zscore(weather_pred.select_dtypes(include=np.number)))
+    threshold = 3
+    weather_pred_new = weather_pred[(z < threshold).all(axis=1)]
     return weather_pred_new
 
 

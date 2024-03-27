@@ -10,19 +10,18 @@ import unittest
 
 
 def preprocess_data(weather_pred):
+    # Convert 'date' column to datetime
+    weather_pred['date'] = pd.to_datetime(weather_pred['date'])
     # Preprocessing steps
-    weather_pred['date'] = pd.to_datetime
-    (weather_pred['dt_iso'].str[:10])
-    weather_pred['time'] = pd.to_datetime
-    (weather_pred['dt_iso'].str[11:19])
     weather_pred['month'] = weather_pred['date'].dt.month
     weather_pred['year'] = weather_pred['date'].dt.year
-    weather_pred['hour'] = weather_pred['time'].dt.hour
+    weather_pred['hour'] = weather_pred['date'].dt.hour
     weather_pred['day'] = weather_pred['date'].dt.day
     weather_pred['weekday'] = weather_pred['date'].dt.weekday
     weather_pred['quarter'] = weather_pred['date'].dt.quarter
-    weather_pred.drop(['dt_iso', 'city_name', 'weather_description',
-                       'date', 'time'], axis=1, inplace=True)
+    # Drop unnecessary columns
+    weather_pred.drop(['dt_iso', 'city_name', 'weather_description', 'date'],
+                      axis=1, inplace=True)
     # Label encoding
     le = LabelEncoder()
     weather_pred['weather_main'] = le.fit_transform

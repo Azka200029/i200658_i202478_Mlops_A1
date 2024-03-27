@@ -1,3 +1,4 @@
 pytest
 Flake8
 pandas
+sklearn

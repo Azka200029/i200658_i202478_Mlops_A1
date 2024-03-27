@@ -7,11 +7,8 @@ from sklearn.preprocessing import LabelEncoder
 from scipy.stats import zscore
 import numpy as np
 import pickle
-<<<<<<< HEAD
 from sklearn.model_selection import GridSearchCV
 
-=======
->>>>>>> 39cb57821e8369f373492796c71f606ba3003534
 
 def preprocess_data(weather_pred):
     # Preprocessing steps
@@ -23,7 +20,6 @@ def preprocess_data(weather_pred):
     weather_pred['day'] = weather_pred['date'].dt.day
     weather_pred['weekday'] = weather_pred['date'].dt.weekday
     weather_pred['quarter'] = weather_pred['date'].dt.quarter
-<<<<<<< HEAD
     weather_pred.drop(['dt_iso', 'city_name', 'weather_description',
                        'date', 'time'], axis=1, inplace=True)
     # Label encoding
@@ -38,31 +34,12 @@ def preprocess_data(weather_pred):
     return weather_pred_new
 
 
-=======
-    weather_pred.drop(['dt_iso', 'city_name', 'weather_description', 'date', 'time'], axis=1, inplace=True)
-    
-    # Label encoding
-    le = LabelEncoder()
-    weather_pred['weather_main'] = le.fit_transform(weather_pred['weather_main'])
-    weather_pred['weather_icon'] = le.fit_transform(weather_pred['weather_icon'])
-    
-    # Remove outliers
-    z = np.abs(zscore(weather_pred))
-    threshold = 3
-    weather_pred_new = weather_pred[(z < 3).all(axis=1)]
-    
-    return weather_pred_new
-
->>>>>>> 39cb57821e8369f373492796c71f606ba3003534
 def train_model(X, y):
     model = RandomForestRegressor()
     model.fit(X, y)
     return model
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 39cb57821e8369f373492796c71f606ba3003534
 def evaluate_model(model, X_test, y_test):
     y_pred = model.predict(X_test)
     r2 = r2_score(y_test, y_pred)
@@ -71,15 +48,9 @@ def evaluate_model(model, X_test, y_test):
     rmse = np.sqrt(mse)
     return r2, mae, mse, rmse
 
-<<<<<<< HEAD
 
 def optimize_decision_tree(X_train, y_train):
     dt_op = DecisionTreeRegressor()
-=======
-def optimize_decision_tree(X_train, y_train):
-    dt_op = DecisionTreeRegressor()
-
->>>>>>> 39cb57821e8369f373492796c71f606ba3003534
     # Define the hyperparameter grid
     parameters = {
         'max_depth': [1, 2, 3, 4, 5, 6, 7, 8, 9],
@@ -87,7 +58,6 @@ def optimize_decision_tree(X_train, y_train):
         'min_samples_split': [1, 2, 3, 4, 5, 6, 7, 8, 9],
         'criterion': ['mse', 'friedman_mse', 'mae']
     }
-<<<<<<< HEAD
     # Create the GridSearchCV object
     grid_search = GridSearchCV(estimator=dt_op, param_grid=parameters, cv=5,
                                n_jobs=-1, verbose=2)
@@ -96,24 +66,11 @@ def optimize_decision_tree(X_train, y_train):
     best_model = grid_search.best_estimator_
     return best_model
 
-=======
-
-    # Create the GridSearchCV object
-    grid_search = GridSearchCV(estimator=dt_op, param_grid=parameters, cv=5, n_jobs=-1)
-    grid_search.fit(X_train, y_train)
-
-    # Get the best parameters and best model
-    best_params = grid_search.best_params_
-    best_model = grid_search.best_estimator_
-    
-    return best_model
->>>>>>> 39cb57821e8369f373492796c71f606ba3003534
 
 def main():
     # Read data
     weather_pred = pd.read_csv('weather_features.csv')
     weather_pred_sample = weather_pred.sample(n=1000, random_state=42)
-<<<<<<< HEAD
     # Preprocess data
     weather_pred_new = preprocess_data(weather_pred_sample)
     # Split data into features and target
@@ -134,36 +91,6 @@ def main():
     # Load model
     loaded_model_dt = pickle.load(open(filename_dt, 'rb'))
     result_dt = loaded_model_dt.score(X_test, y_test)
-=======
-    
-    # Preprocess data
-    weather_pred_new = preprocess_data(weather_pred_sample)
-    
-    # Split data into features and target
-    X = weather_pred_new.drop('temp', axis=1)
-    y = weather_pred_new['temp']
-    
-    # Split data into train and test sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    
-    # Train model
-    model = train_model(X_train, y_train)
-    
-    # Evaluate model
-    r2, mae, mse, rmse = evaluate_model(model, X_test, y_test)
-    
-    # Optimize decision tree
-    best_model = optimize_decision_tree(X_train, y_train)
-    
-    # Serialize model
-    filename_dt = 'weather_pred_dt.pkl'
-    pickle.dump(best_model, open(filename_dt, 'wb'))
-    
-    # Load model
-    loaded_model_dt = pickle.load(open(filename_dt, 'rb'))
-    result_dt = loaded_model_dt.score(X_test, y_test)
-    
->>>>>>> 39cb57821e8369f373492796c71f606ba3003534
     # Print results
     print('Random Forest Regression Results:')
     print('R2 score:', r2)
@@ -173,9 +100,6 @@ def main():
     print('\nDecision Tree Regression Results:')
     print('Accuracy score:', result_dt)
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 39cb57821e8369f373492796c71f606ba3003534
 if __name__ == "__main__":
     main()

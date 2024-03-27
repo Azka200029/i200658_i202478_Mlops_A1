@@ -1,21 +1,20 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
+from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.preprocessing import LabelEncoder
 from scipy.stats import zscore
 import numpy as np
 import pickle
-from sklearn.model_selection import GridSearchCV
+import unittest
 
 
 def preprocess_data(weather_pred):
     # Preprocessing steps
-    weather_pred['date'] = pd.to_datetime(weather_pred['dt_iso'].str[:10],
-                                          format='%Y-%m-%d')
-    weather_pred['time'] = pd.to_datetime(weather_pred['dt_iso'].str[11:19],
-                                          format='%H:%M:%S')
+    weather_pred['date'] = pd.to_datetime
+    (weather_pred['dt_iso'].str[:10])
+    weather_pred['time'] = pd.to_datetime
+    (weather_pred['dt_iso'].str[11:19])
     weather_pred['month'] = weather_pred['date'].dt.month
     weather_pred['year'] = weather_pred['date'].dt.year
     weather_pred['hour'] = weather_pred['time'].dt.hour
@@ -31,9 +30,8 @@ def preprocess_data(weather_pred):
     weather_pred['weather_icon'] = le.fit_transform
     (weather_pred['weather_icon'])
     # Remove outliers
-    z = np.abs(zscore(weather_pred.select_dtypes(include=np.number)))
-    threshold = 3
-    weather_pred_new = weather_pred[(z < threshold).all(axis=1)]
+    z = np.abs(zscore(weather_pred))
+    weather_pred_new = weather_pred[(z < 3).all(axis=1)]
     return weather_pred_new
 
 
@@ -41,33 +39,6 @@ def train_model(X, y):
     model = RandomForestRegressor()
     model.fit(X, y)
     return model
-
-
-def evaluate_model(model, X_test, y_test):
-    y_pred = model.predict(X_test)
-    r2 = r2_score(y_test, y_pred)
-    mae = mean_absolute_error(y_test, y_pred)
-    mse = mean_squared_error(y_test, y_pred)
-    rmse = np.sqrt(mse)
-    return r2, mae, mse, rmse
-
-
-def optimize_decision_tree(X_train, y_train):
-    dt_op = DecisionTreeRegressor()
-    # Define the hyperparameter grid
-    parameters = {
-        'max_depth': [1, 2, 3, 4, 5, 6, 7, 8, 9],
-        'min_samples_leaf': [1, 2, 3, 4, 5, 6, 7, 8, 9],
-        'min_samples_split': [1, 2, 3, 4, 5, 6, 7, 8, 9],
-        'criterion': ['mse', 'friedman_mse', 'mae']
-    }
-    # Create the GridSearchCV object
-    grid_search = GridSearchCV(estimator=dt_op, param_grid=parameters, cv=5,
-                               n_jobs=-1, verbose=2)
-    grid_search.fit(X_train, y_train)
-    # Get the best parameters and best model
-    best_model = grid_search.best_estimator_
-    return best_model
 
 
 def main():
@@ -85,28 +56,64 @@ def main():
     # Train model
     model = train_model(X_train, y_train)
     # Evaluate model
-    r2, mae, mse, rmse = evaluate_model(model, X_test, y_test)
-    # Optimize decision tree
-    best_model = optimize_decision_tree(X_train, y_train)
-    # Serialize model
-    filename_dt = 'weather_pred_dt.pkl'
-    pickle.dump(best_model, open(filename_dt, 'wb'))
-    # Load model
-    loaded_model_dt = pickle.load(open(filename_dt, 'rb'))
-    result_dt = loaded_model_dt.score(X_test, y_test)
+    r2 = model.score(X_test, y_test)
+    y_pred = model.predict(X_test)
+    mae = mean_absolute_error(y_test, y_pred)
+    mse = mean_squared_error(y_test, y_pred)
+    rmse = np.sqrt(mse)
     # Print results
     print('Random Forest Regression Results:')
     print('R2 score:', r2)
     print('Mean Absolute Error:', mae)
     print('Mean Squared Error:', mse)
     print('Root Mean Squared Error:', rmse)
-    print('\nDecision Tree Regression Results:')
-    print('Accuracy score:', result_dt)
 
 
-if __name__ == "__main__":
+class TestWeatherPrediction(unittest.TestCase):
+    def setUp(self):
+        # Load data
+        self.weather_pred = pd.read_csv('weather_features.csv')
+        # Preprocess data
+        self.weather_pred_sample = self.weather_pred.sample(n=1000,
+                                                            random_state=42)
+        self.weather_pred_new = preprocess_data(self.weather_pred_sample)
+        # Split data
+        self.X = self.weather_pred_new.drop('temp', axis=1)
+        self.y = self.weather_pred_new['temp']
+        self.X_train, self.X_test, self.y_train,
+        self.y_test = train_test_split(self.X, self.y, test_size=0.2,
+                                       random_state=42)
+        # Train model
+        self.model = train_model(self.X_train, self.y_train)
+
+    def test_model_performance(self):
+        # Evaluate model
+        r2 = self.model.score(self.X_test, self.y_test)
+        y_pred = self.model.predict(self.X_test)
+        mae = mean_absolute_error(self.y_test, y_pred)
+        mse = mean_squared_error(self.y_test, y_pred)
+        rmse = np.sqrt(mse)
+
+        self.assertTrue(r2 > 0.5,
+                        "R2 score should be greater than 0.5")
+        self.assertTrue(mae < 2,
+                        "Mean Absolute Error should be less than 2")
+        self.assertTrue(rmse < 3,
+                        "Root Mean Squared Error should be less than 3")
+
+    def test_model_pickle(self):
+        # Serialize model
+        filename = 'weather_model.pkl'
+        pickle.dump(self.model, open(filename, 'wb'))
+        # Load model
+        loaded_model = pickle.load(open(filename, 'rb'))
+        self.assertIsNotNone(loaded_model, "Model should be loaded success")
+
+
+if __name__ == '__main__':
     print('Executing main function...')
     main()
     print('Execution completed.')
     print('Done')
-    print('Done again')
+    print('Done')
+    unittest.main()

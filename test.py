@@ -69,7 +69,7 @@ def main():
     print('Root Mean Squared Error:', rmse)
 
 
-class TestWeatherPrediction(unittest.TestCase):  
+class TestWeatherPrediction(unittest.TestCase):
     def setUp(self):
         # Load data
         self.weather_pred = pd.read_csv('weather_features.csv')
@@ -100,7 +100,7 @@ class TestWeatherPrediction(unittest.TestCase):
                         "Mean Absolute Error should be less than 2")
         self.assertTrue(rmse < 3,
                         "Root Mean Squared Error should be less than 3")
-       
+    
     def test_model_pickle(self):
         # Serialize model
         filename = 'weather_model.pkl'

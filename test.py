@@ -20,7 +20,7 @@ def preprocess_data(weather_pred):
     weather_pred['weekday'] = weather_pred['date'].dt.weekday
     weather_pred['quarter'] = weather_pred['date'].dt.quarter
     # Drop unnecessary columns
-    weather_pred.drop(['dt_iso', 'city_name', 'weather_description', 'date'],
+    weather_pred.drop(['dt_iso', 'city_name', 'weather_description'],
                       axis=1, inplace=True)
     # Label encoding
     le = LabelEncoder()

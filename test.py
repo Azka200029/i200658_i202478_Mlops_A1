@@ -11,6 +11,7 @@ import unittest
 
 def preprocess_data(weather_pred):
     # Convert 'date' column to datetime
+    weather_pred['date'] = 0
     weather_pred['date'] = pd.to_datetime(weather_pred['date'])
     # Preprocessing steps
     weather_pred['month'] = weather_pred['date'].dt.month

@@ -30,7 +30,11 @@ def preprocess_data(weather_pred):
     weather_pred['weather_icon'] = le.fit_transform
     (weather_pred['weather_icon'])
     # Remove outliers
-    z = np.abs(zscore(weather_pred))
+    numeric_columns = weather_pred.select_dtypes(include=[np.number]).columns
+    weather_pred_numeric = weather_pred[numeric_columns]
+
+    # Remove outliers using z-score normalization
+    z = np.abs(zscore(weather_pred_numeric))
     weather_pred_new = weather_pred[(z < 3).all(axis=1)]
     return weather_pred_new
 

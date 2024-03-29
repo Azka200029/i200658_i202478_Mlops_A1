@@ -87,6 +87,7 @@ class TestWeatherPrediction(unittest.TestCase):
         # Split data
         self.X = self.weather_pred_new.drop('temp', axis=1)
         self.y = self.weather_pred_new['temp']
+        # Fix the line below to remove the line break
         self.X_train, self.X_test, self.y_train,
         self.y_test = train_test_split(self.X, self.y, test_size=0.2,
                                        random_state=42)

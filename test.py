@@ -54,16 +54,12 @@ def main():
     # Split data into features and target
     X = weather_pred_new.drop('temp', axis=1)
     y = weather_pred_new['temp']
-    # Adjust train_test_split parameters
+    # Calculate test_size based on the proportion of the dataset
     test_size = min(0.2, len(weather_pred_new) / len(weather_pred))
+    # Split data into train and test sets
     X_train, X_test, y_train, y_test = train_test_split(X, y,
                                                         test_size=test_size,
                                                         random_state=42)
-    # Check if the resulting train set is empty
-    if len(X_train) == 0:
-        raise ValueError
-    ("Train set is empty. Adjust test_size or train_size parameters.")
-
     # Train model
     model = train_model(X_train, y_train)
     # Evaluate model

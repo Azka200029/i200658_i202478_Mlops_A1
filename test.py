@@ -25,10 +25,13 @@ def preprocess_data(weather_pred):
                       axis=1, inplace=True)
     # Label encoding
     le = LabelEncoder()
-    weather_pred['weather_main'] = le.fit_transform
-    (weather_pred['weather_main'])
-    weather_pred['weather_icon'] = le.fit_transform
-    (weather_pred['weather_icon'])
+    weather_pred['weather_main'] = (
+        le.fit_transform(weather_pred['weather_main'])
+    )
+    weather_pred['weather_icon'] = (
+        le.fit_transform(weather_pred['weather_icon'])
+    )
+
     # Remove outliers
     numeric_columns = weather_pred.select_dtypes(include=[np.number]).columns
     weather_pred_numeric = weather_pred[numeric_columns]
@@ -55,7 +58,7 @@ def main():
     X = weather_pred_new.drop('temp', axis=1)
     y = weather_pred_new['temp']
     # Calculate test_size based on the proportion of the dataset
-    test_size = min(0.2, len(weather_pred_new) / len(weather_pred))
+    test_size = min(0.2, len(weather_pred_new) / len(weather_pred_sample))
     # Split data into train and test sets
     X_train, X_test, y_train, y_test = train_test_split(
         X, y,

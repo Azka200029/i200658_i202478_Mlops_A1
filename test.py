@@ -57,9 +57,11 @@ def main():
     # Calculate test_size based on the proportion of the dataset
     test_size = min(0.2, len(weather_pred_new) / len(weather_pred))
     # Split data into train and test sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y,
-                                                        test_size=test_size,
-                                                        random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y,
+        test_size=test_size,
+        random_state=42
+    )
     # Train model
     model = train_model(X_train, y_train)
     # Evaluate model
@@ -81,15 +83,17 @@ class TestWeatherPrediction(unittest.TestCase):
         # Load data
         self.weather_pred = pd.read_csv('weather_features.csv')
         # Preprocess data
-        self.weather_pred_sample = self.weather_pred.sample(n=1000,
-                                                            random_state=42)
+        self.weather_pred_sample = (
+            self.weather_pred.sample(n=1000, random_state=42)
+        )
         self.weather_pred_new = preprocess_data(self.weather_pred_sample)
         # Split data
         self.X = self.weather_pred_new.drop('temp', axis=1)
         self.y = self.weather_pred_new['temp']
-        self.X_train, self.X_test, self.y_train,
-        self.y_test = train_test_split(self.X, self.y, test_size=0.2,
-                                       random_state=42)
+        # Fix the line below to remove the line break
+        self.X_train, self.X_test, self.y_train, self.y_test = (
+            train_test_split(self.X, self.y, test_size=0.2, random_state=42)
+        )
         # Train model
         self.model = train_model(self.X_train, self.y_train)
 
@@ -124,5 +128,6 @@ if __name__ == '__main__':
     print('Done')
     print('Done')
     unittest.main()
+    print('Done')
     print('Done')
     print('Done')

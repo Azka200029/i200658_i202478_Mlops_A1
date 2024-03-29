@@ -57,9 +57,11 @@ def main():
     # Calculate test_size based on the proportion of the dataset
     test_size = min(0.2, len(weather_pred_new) / len(weather_pred))
     # Split data into train and test sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y,
-                                                        test_size=test_size,
-                                                        random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y,
+        test_size=test_size,
+        random_state=42
+    )
     # Train model
     model = train_model(X_train, y_train)
     # Evaluate model

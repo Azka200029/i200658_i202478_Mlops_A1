@@ -51,14 +51,16 @@ def train_model(X, y):
 def main():
     # Read data
     weather_pred = pd.read_csv('weather_features.csv')
-    weather_pred_sample = weather_pred.sample(n=1000, random_state=42)
+    weather_pred_sample = (
+        weather_pred.sample(n=1000, random_state=42)
+    )
     # Preprocess data
     weather_pred_new = preprocess_data(weather_pred_sample)
     # Split data into features and target
     X = weather_pred_new.drop('temp', axis=1)
     y = weather_pred_new['temp']
     # Calculate test_size based on the proportion of the dataset
-    test_size = min(0.2, len(weather_pred_new) / len(weather_pred_sample))
+    test_size = min(0.2, len(weather_pred_new) / len(weather_pred))
     # Split data into train and test sets
     X_train, X_test, y_train, y_test = train_test_split(
         X, y,

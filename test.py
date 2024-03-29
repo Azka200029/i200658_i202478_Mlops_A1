@@ -81,16 +81,17 @@ class TestWeatherPrediction(unittest.TestCase):
         # Load data
         self.weather_pred = pd.read_csv('weather_features.csv')
         # Preprocess data
-        self.weather_pred_sample = self.weather_pred.sample(n=1000,
-                                                            random_state=42)
+        self.weather_pred_sample = (
+            self.weather_pred.sample(n=1000, random_state=42)
+        )
         self.weather_pred_new = preprocess_data(self.weather_pred_sample)
         # Split data
         self.X = self.weather_pred_new.drop('temp', axis=1)
         self.y = self.weather_pred_new['temp']
         # Fix the line below to remove the line break
-        self.X_train, self.X_test, self.y_train,
-        self.y_test = train_test_split(self.X, self.y, test_size=0.2,
-                                       random_state=42)
+        self.X_train, self.X_test, self.y_train, self.y_test = (
+            train_test_split(self.X, self.y, test_size=0.2, random_state=42)
+        )
         # Train model
         self.model = train_model(self.X_train, self.y_train)
 

@@ -75,3 +75,4 @@ class TestWeatherPrediction(unittest.TestCase):
 if __name__ == '__main__':
     unittest.main()
     print("Everything passed")
+    print("Congratulations! You have successfully completed this project.")

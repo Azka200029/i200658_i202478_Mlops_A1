@@ -25,8 +25,13 @@ def preprocess_data(weather_pred):
                       axis=1, inplace=True)
     # Label encoding
     le = LabelEncoder()
-    weather_pred['weather_main'] = le.fit_transform(weather_pred['weather_main'])
-    weather_pred['weather_icon'] = le.fit_transform(weather_pred['weather_icon'])
+    weather_pred['weather_main'] = (
+        le.fit_transform(weather_pred['weather_main'])
+    )
+    weather_pred['weather_icon'] = (
+        le.fit_transform(weather_pred['weather_icon'])
+    )
+
     # Remove outliers
     numeric_columns = weather_pred.select_dtypes(include=[np.number]).columns
     weather_pred_numeric = weather_pred[numeric_columns]

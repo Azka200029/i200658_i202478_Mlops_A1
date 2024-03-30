@@ -1,14 +1,13 @@
-name: Code Quality Check
+name: Test Workflow
 
 on:
-  push:
+  pull_request:
     branches:
-      - dev
+      - test
 
 jobs:
-  quality_check:
+  unit_tests:
     runs-on: ubuntu-latest
-    
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -16,13 +15,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.x
 
-      - name: Install Flake8
-        run: pip install flake8
-
-      - name: Run Flake8
-        run: flake8 .
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
+          pip install pandas  # Install pandas module
+
+      - name: Run unit tests
+        run: python test.py

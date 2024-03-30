@@ -1,2 +1,4 @@
 pytest
 Flake8
+pandas
+scikit-learn

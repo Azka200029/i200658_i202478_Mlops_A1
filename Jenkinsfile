@@ -16,9 +16,10 @@ pipeline {
 
         stage('Push to Docker Hub') {
             steps {
-                bat 'docker login'
-                bat 'docker tag docker_image Azka200029/i200658_i202478_Mlops_A1:first_tag'
-                bat 'docker push Azka200029/i200658_i202478_Mlops_A1:first_tag'
+                withCredentials([usernamePassword(credentialsId: 'azkaasim', passwordVariable: '#ANARAMSmandi292000', usernameVariable: 'azkaasim')]) {
+                    sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
+                    sh "docker build -t your-image-name ."
+                    sh "docker push your-username/your-repo-name:your-tag"
             }
         }
     }

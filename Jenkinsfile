@@ -1,6 +1,6 @@
 pipeline {
     environment {
-        registry = "azka200029/i200658_i202478_mlops_a1" 
+        registry = "azkaasim/i200658_i202478_mlop_a1" 
         registryCredential = 'docker-credentials' 
         dockerImage = ''
     }

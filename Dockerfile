@@ -1,20 +1,19 @@
-# Use an official Python runtime as the base image
-FROM python:3.8
+FROM python:3.10
 
-# Set the working directory in the container
+# Install Dockerfile
+RUN apt-get update && apt-get install -y docker.io
+
+# Set the working directory
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Copy the requirements file
+COPY requirements.txt .
 
-# Install any needed dependencies specified in requirements.txt
+# Install the dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Make port 80 available to the world outside this container
-EXPOSE 80
+# Copy the rest of the application code
+COPY . .
 
-# Define environment variable
-ENV NAME World
-
-# Run app.py when the container launches
-CMD ["python", "app.py"]
+# Set the entry point
+CMD [ "python", "app.py" ]

@@ -1,24 +1,30 @@
 pipeline {
+    environment {
+        registry = "Azka200029/i200658_i202478_Mlops_A1" 
+        registryCredential = 'docker-credentials' 
+        dockerImage = ''
+    }
     agent any
-
     stages {
-        stage('Checkout') {
+        stage('Get Dockerfile from GitHub') {
             steps {
-                git branch: 'main', url: 'https://github.com/Azka200029/i200658_i202478_Mlops_A1.git'
+                git branch: 'main', url: 'https://github.com/Azka200029/i200658_i202478_Mlops_A1.git' 
             }
         }
-
-        stage('Build Image') {
+        stage('Build Docker image') {
             steps {
-                bat 'docker build -t docker_image .'
+                script {
+                    dockerImage = docker.build(registry + ":$BUILD_NUMBER")
+                }
             }
         }
-
-        stage('Push to Docker Hub') {
+        stage('Push Docker image to Docker Hub') {
             steps {
-                bat 'docker login'
-                bat 'docker tag docker_image azkaasim/Mlops_A1:first_tag'
-                bat 'docker push azkaasim/Mlops_A1:first_tag'
+                script {
+                    docker.withRegistry('', registryCredential) {
+                        dockerImage.push()
+                    }
+                }
             }
         }
     }

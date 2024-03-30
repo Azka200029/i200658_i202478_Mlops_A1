@@ -17,8 +17,8 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 bat 'docker login'
-                bat 'docker tag docker_image SanaAzka/Mlops_A1:first_tag'
-                bat 'docker push SanaAzka/Mlops_A1:first_tag'
+                bat 'docker tag docker_image azkaasim/Mlops_A1:first_tag'
+                bat 'docker push azkaasim/Mlops_A1:first_tag'
             }
         }
     }

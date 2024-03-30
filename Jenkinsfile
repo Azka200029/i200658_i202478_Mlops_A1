@@ -1,25 +1,35 @@
 pipeline {
+    environment {
+        registry = "Azka200029/i200658_i202478_Mlops_A1" 
+        registryCredential = 'azkaasim' 
+        dockerImage = ''
+    }
     agent any
-
     stages {
-        stage('Checkout') {
+        stage('Get Dockerfile from GitHub') {
             steps {
-                git branch: 'main', url: 'https://github.com/Azka200029/i200658_i202478_Mlops_A1.git'
+                git branch: 'main', url: 'https://github.com/Azka200029/i200658_i202478_Mlops_A1.git' 
             }
         }
-
-        stage('Build Image') {
+        stage('Build Docker image') {
             steps {
-                bat 'docker build -t docker_image_A1 .'
+                script {
+                    dockerImage = docker.build(registry + ":$BUILD_NUMBER")
+                }
             }
         }
-
-        stage('Push to Docker Hub') {
+        stage('Push Docker image to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'azkaasim', passwordVariable: '#ANARAMSmandi292000', usernameVariable: 'azkaasim')]) {
-                    sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
-                    sh "docker build -t your-image-name ."
-                    sh "docker push your-username/your-repo-name:your-tag"
+                script {
+                    docker.withRegistry('', registryCredential) {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
+        stage('Clean up local image') {
+            steps {
+                bat "docker rmi $registry:$BUILD_NUMBER"
             }
         }
     }

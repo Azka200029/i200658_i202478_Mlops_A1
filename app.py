@@ -2,11 +2,15 @@ from flask import Flask, request, jsonify
 import pandas as pd
 import numpy as np
 from scipy.stats import zscore
-from sklearn.model_selection import train_test_split
+# from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.preprocessing import LabelEncoder
+import pickle
 
 app = Flask(__name__)
+
+with open('weather_pred_dt.pkl', 'rb') as file:
+    model = pickle.load(file)
 
 
 def preprocess_data(weather_pred):
@@ -35,7 +39,6 @@ def preprocess_data(weather_pred):
 
     z = np.abs(zscore(weather_pred))
     weather_pred_new = weather_pred[(z < 3).all(axis=1)]
-
     return weather_pred_new
 
 
@@ -52,11 +55,8 @@ def predict():
     weather_data = pd.DataFrame(data['weather_data'])
     weather_data = preprocess_data(weather_data)
     X = weather_data.drop('temp', axis=1)
-    y = weather_data['temp']
-    X_train, y_train = (
-            train_test_split(X, y, test_size=0.2, random_state=42)
-        )
-    model = train_model(X_train, y_train)
+
+    # Predict using the loaded model
     prediction = model.predict(X)
     return jsonify({'prediction': prediction.tolist()})
 

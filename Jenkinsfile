@@ -27,10 +27,5 @@ pipeline {
                 }
             }
         }
-        stage('Clean up local image') {
-            steps {
-                bat "docker rmi $registry:$BUILD_NUMBER"
-            }
-        }
     }
 }
